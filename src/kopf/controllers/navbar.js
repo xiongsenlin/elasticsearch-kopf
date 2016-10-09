@@ -6,7 +6,8 @@ kopf.controller('NavbarController', ['$scope', '$location',
 
     $scope.new_refresh = '' + ExternalSettingsService.getRefreshRate();
     $scope.theme = ExternalSettingsService.getTheme();
-    $scope.new_host = '';
+    $scope.host_list = ExternalSettingsService.getElasticsearchHosts();
+    $scope.new_host = ExternalSettingsService.getDefaultElasticsearchHost();
     $scope.current_host = ElasticService.getHost();
     $scope.host_history = HostHistoryService.getHostHistory();
 
@@ -47,6 +48,10 @@ kopf.controller('NavbarController', ['$scope', '$location',
         $scope.connectToHost($scope.new_host);
       }
     };
+
+    $scope.changeEsHost = function() {
+      $scope.connectToHost($scope.new_host);
+    }
 
     $scope.connectToHost = function(host) {
       try {

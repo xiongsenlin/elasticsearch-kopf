@@ -2,11 +2,9 @@ kopf.factory('ExternalSettingsService', ['DebugService',
   function(DebugService) {
 
     var KEY = 'kopfSettings';
-
-    var ES_HOST = 'location';
+    var ES_HOSTS = 'location_list';
 
     var ES_ROOT_PATH = 'elasticsearch_root_path';
-
     var WITH_CREDENTIALS = 'with_credentials';
 
     var REFRESH_RATE = 'refresh_rate';
@@ -56,8 +54,15 @@ kopf.factory('ExternalSettingsService', ['DebugService',
       return settings;
     };
 
-    this.getElasticsearchHost = function() {
-      return this.getSettings()[ES_HOST];
+    this.getElasticsearchHosts = function() {
+      return this.getSettings()[ES_HOSTS];
+    };
+
+    this.getDefaultElasticsearchHost = function() {
+      var hostList = this.getSettings()[ES_HOSTS];
+      if (hostList.length > 0) {
+        return hostList[0].trim();
+      }
     };
 
     this.getElasticsearchRootPath = function() {

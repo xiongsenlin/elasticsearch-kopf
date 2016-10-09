@@ -1,7 +1,7 @@
 {
-    "location": "10.32.167.144:8411",
+    "location_list": [],
     "elasticsearch_root_path": "",
     "with_credentials": false,
-    "theme": "light",
+    "theme": "dark",
     "refresh_rate": 30000
 }

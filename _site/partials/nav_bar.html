@@ -1,14 +1,9 @@
 <div class="navbar navbar-fixed-top navbar-cluster-status-{{clusterStatus}}" ng-controller="NavbarController">
   <div class="container-fluid">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle dropdown-toggle navbar-toggle-{{clusterStatus}}" data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
       <span class="navbar-brand navbar-cluster-status-{{clusterStatus}}">
-        <i class="fa fa-fw fa-circle navbar-logo-action">
-          <span style="display:block; margin-top: -24px; font-size: 26px; font-weight: 500" class="navbar-cluster-status-{{clusterStatus}}-nav">K</span>
+        <i class="fa fa-fw fa-4x fa-circle navbar-logo-action">
+          <span style="display: block; margin-top: -50px;" class="navbar-cluster-status-{{clusterStatus}}-nav">K</span>
         </i>
       </span>
     </div>
@@ -55,26 +50,27 @@
             <li class="divider"></li>
             <li class="navbar-menu-section">
               <div class="row">
-                <div class="col-xs-5">
+                <div class="col-lg-5">
                   <label class="navbar-app-setting pull-right">refresh rate:</label>
                 </div>
-                <div class="col-xs-7">
+                <div class="col-lg-7">
                   <select ng-model="new_refresh" class="form-control input-sm" ng-change="changeRefresh()">
-                    <option value="5000">every 5s</option>
-                    <option value="10000">every 10s</option>
-                    <option value="15000">every 15s</option>
                     <option value="30000">every 30s</option>
                     <option value="60000">every 1m</option>
+                    <option value="120000">every 2m</option>
+                    <option value="300000">every 5m</option>
+                    <option value="600000">every 10m</option>
+                    <option value="1800000">every 30m</option>
                   </select>
                 </div>
               </div>
             </li>
             <li class="navbar-menu-section">
               <div class="row">
-                <div class="col-xs-5">
+                <div class="col-lg-5">
                   <label class="navbar-app-setting pull-right">theme:</label>
                 </div>
-                <div class="col-xs-7">
+                <div class="col-lg-7">
                   <select ng-model="theme" class="form-control input-sm" ng-change="changeTheme()">
                     <option value="light">light</option>
                     <option value="dark">dark</option>
@@ -86,22 +82,21 @@
             <li>
               <div class="row">
                 <div class="col-lg-12">
-                  <span class="navbar-app-setting">connect to a different host</span>
+                  <span class="navbar-app-setting">elasticsearch cluster:</span>
                 </div>
               </div>
             </li>
             <li class="navbar-menu-section">
               <div class="row">
                 <div class="col-lg-12">
-                  <input type="text" class="form-control" ng-model="new_host" ng-keypress="handleConnectToHost($event)" placeholder="http://localhost:9200">
+                  <select ng-model="new_host" class="form-control input-sm" ng-change="changeEsHost()">
+                    <option ng-selected="{{ host_item == new_host }}" ng-repeat="host_item in host_list"
+                            value="{{ host_item }}">{{ host_item }}</option>
+                  </select>
                 </div>
               </div>
             </li>
-            <li ng-show="host_history.length > 0"><h5>previous hosts</h5></li>
-            <li ng-show="host_history.length > 0" class="divider"></li>
-            <li ng-show="host_history.length > 0" ng-repeat="host in host_history" ng-click="connectToHost(host.host)">
-              <a target="_self" href class="host-history">{{host.host}}</a>
-            </li>
+
             <li class="divider"></li>
             <li>
               <div class="row">

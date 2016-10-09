@@ -92,10 +92,15 @@ kopf.factory('ElasticService', ['$http', '$q', '$timeout', '$location',
      */
     this.connect = function(host) {
       this.reset();
+      if (!isDefined(host) || host.length == 0) {
+        host = ExternalSettingsService.getDefaultElasticsearchHost();
+      }
       var root = ExternalSettingsService.getElasticsearchRootPath();
       var withCredentials = ExternalSettingsService.withCredentials();
       this.connection = new ESConnection(host + root, withCredentials);
+
       DebugService.debug('Elasticseach connection:', this.connection);
+
       this.clusterRequest('GET', '/', {}, {},
           function(data) {
             if (data.OK) { // detected https://github.com/Asquera/elasticsearch-http-basic
@@ -973,5 +978,4 @@ kopf.factory('ElasticService', ['$http', '$q', '$timeout', '$location',
     };
 
     return this;
-
   }]);

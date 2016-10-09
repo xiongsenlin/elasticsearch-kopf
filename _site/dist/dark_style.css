@@ -1,11 +1,15 @@
+html {
+	padding-top: 50px;
+}
+
 html,body {
   height: 100%;
   color: #d0d0d0;
   font-weight: 300;
-  font-size: 12px;
-  padding-top: 20px;
+  font-size: 16px;
   background-color: #222;
 }
+
 .form-label {
 	color: #d0d0d0;
 }

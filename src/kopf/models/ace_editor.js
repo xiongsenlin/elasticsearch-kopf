@@ -7,8 +7,9 @@ function AceEditor(target) {
   this.editor.getSession().setMode('ace/mode/json');
   this.editor.setOptions({
     fontFamily: 'Monaco, Menlo, Consolas, "Courier New", monospace',
-    fontSize: '12px',
-    fontWeight: '400'
+    fontSize: '16px',
+    fontWeight: '400',
+    maxLines: '500'
   });
 
   // validation error

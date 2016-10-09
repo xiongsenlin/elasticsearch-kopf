@@ -1256,17 +1256,15 @@ kopf.controller('GlobalController', ['$scope', '$location', '$sce', '$window',
 
     $scope.connect = function() {
       try {
-        var host = 'http://localhost:9200'; // default
+        var host = '';
         if ($location.host() !== '') { // not opening from fs
           var location = $scope.readParameter('location');
           var url = $location.absUrl();
-          if (isDefined(location)) {
+          if (isDefined(location) ||
+              isDefined(location = ExternalSettingsService.getDefaultElasticsearchHost())) {
             host = location;
           } else if (url.indexOf('/_plugin/kopf') > -1) {
             host = url.substring(0, url.indexOf('/_plugin/kopf'));
-          } else {
-            host = $location.protocol() + '://' + $location.host() +
-                ':' + $location.port();
           }
         }
         ElasticService.connect(host);
@@ -1509,7 +1507,8 @@ kopf.controller('NavbarController', ['$scope', '$location',
 
     $scope.new_refresh = '' + ExternalSettingsService.getRefreshRate();
     $scope.theme = ExternalSettingsService.getTheme();
-    $scope.new_host = '';
+    $scope.host_list = ExternalSettingsService.getElasticsearchHosts();
+    $scope.new_host = ExternalSettingsService.getDefaultElasticsearchHost();
     $scope.current_host = ElasticService.getHost();
     $scope.host_history = HostHistoryService.getHostHistory();
 
@@ -1550,6 +1549,10 @@ kopf.controller('NavbarController', ['$scope', '$location',
         $scope.connectToHost($scope.new_host);
       }
     };
+
+    $scope.changeEsHost = function() {
+      $scope.connectToHost($scope.new_host);
+    }
 
     $scope.connectToHost = function(host) {
       try {
@@ -1826,6 +1829,9 @@ kopf.controller('RestController', ['$scope', '$location', '$timeout',
       var method = $scope.request.method;
       var host = ElasticService.getHost();
       var path = encodeURI($scope.request.path);
+	  if(path.substring(0,1) !== '/') {
+		  path = '/' + path;
+	  }
       var body = $scope.editor.getValue();
       var curl = 'curl -X' + method + ' \'' + host + path + '\'';
       if (['POST', 'PUT'].indexOf(method) >= 0) {
@@ -3624,8 +3630,9 @@ function AceEditor(target) {
   this.editor.getSession().setMode('ace/mode/json');
   this.editor.setOptions({
     fontFamily: 'Monaco, Menlo, Consolas, "Courier New", monospace',
-    fontSize: '12px',
-    fontWeight: '400'
+    fontSize: '16px',
+    fontWeight: '400',
+    maxLines: '500'
   });
 
   // validation error
@@ -4625,10 +4632,15 @@ kopf.factory('ElasticService', ['$http', '$q', '$timeout', '$location',
      */
     this.connect = function(host) {
       this.reset();
+      if (!isDefined(host) || host.length == 0) {
+        host = ExternalSettingsService.getDefaultElasticsearchHost();
+      }
       var root = ExternalSettingsService.getElasticsearchRootPath();
       var withCredentials = ExternalSettingsService.withCredentials();
       this.connection = new ESConnection(host + root, withCredentials);
+
       DebugService.debug('Elasticseach connection:', this.connection);
+
       this.clusterRequest('GET', '/', {}, {},
           function(data) {
             if (data.OK) { // detected https://github.com/Asquera/elasticsearch-http-basic
@@ -5506,7 +5518,6 @@ kopf.factory('ElasticService', ['$http', '$q', '$timeout', '$location',
     };
 
     return this;
-
   }]);
 
 kopf.factory('ExplainService', ['$TreeDnDConvert',
@@ -5561,9 +5572,9 @@ kopf.factory('ExternalSettingsService', ['DebugService',
   function(DebugService) {
 
     var KEY = 'kopfSettings';
+    var ES_HOSTS = 'location_list';
 
     var ES_ROOT_PATH = 'elasticsearch_root_path';
-
     var WITH_CREDENTIALS = 'with_credentials';
 
     var REFRESH_RATE = 'refresh_rate';
@@ -5611,6 +5622,17 @@ kopf.factory('ExternalSettingsService', ['DebugService',
         };
       });
       return settings;
+    };
+
+    this.getElasticsearchHosts = function() {
+      return this.getSettings()[ES_HOSTS];
+    };
+
+    this.getDefaultElasticsearchHost = function() {
+      var hostList = this.getSettings()[ES_HOSTS];
+      if (hostList.length > 0) {
+        return hostList[0].trim();
+      }
     };
 
     this.getElasticsearchRootPath = function() {

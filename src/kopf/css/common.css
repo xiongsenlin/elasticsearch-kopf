@@ -156,7 +156,7 @@ textarea {
     resize: none;
 }
 .connection-info {
-    line-height: 30px;
+    line-height: 50px;
     padding-right: 10px;
 }
 .connect-menu {
@@ -367,4 +367,8 @@ textarea {
 
 .tooltip {
     white-space: pre-wrap !important;
+}
+
+.input-sm {
+    font-size: 16px !important;
 }

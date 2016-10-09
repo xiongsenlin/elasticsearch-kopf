@@ -156,7 +156,7 @@ textarea {
     resize: none;
 }
 .connection-info {
-    line-height: 30px;
+    line-height: 50px;
     padding-right: 10px;
 }
 .connect-menu {
@@ -367,6 +367,10 @@ textarea {
 
 .tooltip {
     white-space: pre-wrap !important;
+}
+
+.input-sm {
+    font-size: 16px !important;
 }
 .aliases-index-alias {
 	border: 1px solid;
@@ -611,7 +615,7 @@ a.cluster-map-node-action {
 	line-height: 30px;
 }
 .cluster-map-stat-description {
-	font-size: 12px;
+	font-size: 16px;
 	text-align: left;
 	font-weight: 300;
 }
@@ -697,7 +701,7 @@ a.cluster-map-node-action {
 
 .navbar-nav {
 	margin-top: 0px;
-	font-size: 13px;
+	font-size: 20px;
 }
 
 .navbar-collapse {
@@ -712,6 +716,9 @@ a.cluster-map-node-action {
     margin-top: 4px;
     margin-bottom: 4px;
 }
+.dropdown-menu {
+	font-size: 16px !important;
+}
 .navbar-toggle .icon-bar {
 	width: 10px;
 	height: 1px;
@@ -720,20 +727,25 @@ a.cluster-map-node-action {
 	margin-right: 0px !important;
 }
 .navbar {
-	height: 30px !important;
-	min-height: 30px !important;
+	height: 50px !important;
+	min-height: 50px !important;
+}
+
+.navbar-header {
+	height: 50px !important;
+	line-height: 50px !important;
 }
 .navbar-logo {
-	font-size: 38px;
+	font-size: 50px;
 	font-variant: small-caps;
-	line-height: 32px !important;
+	line-height: 50px !important;
 	padding-top: 0px !important;
 	padding-bottom: 0px !important;
 	font-weight: 100;
 	vertical-align: middle;
 }
 .navbar-logo-action {
-	font-size: 24px;
+	font-size: 50px;
 	font-weight: 100;
 	vertical-align: middle;
 	font-variant: normal;
@@ -742,14 +754,14 @@ a.cluster-map-node-action {
 	vertical-align: middle;
 	padding-top: 4px;
 	padding-bottom: 4px;
-	width: 220px !important;
+	width: 280px !important;
 }
 .navbar-nav > li {
-	height: 30px !important;
+	height: 50px !important;
 }
 .navbar-nav > li > a {
-	height: 30px !important;
-	line-height: 30px;
+	height: 50px !important;
+	line-height: 50px;
 	padding-top: 0px;
 	padding-bottom:0px;
 	padding-left: 13px;
@@ -757,10 +769,10 @@ a.cluster-map-node-action {
 }
 .nav-pills > li > a {
 	font-weight: 400;
-	font-size: 13px;
+	font-size: 14px;
 }
 .navbar-app-settings {
-	width: auto;
+	min-width: 280px !important;
 	padding-top: 6px;
 	padding-left: 10px;
 	padding-right: 10px;
@@ -768,7 +780,7 @@ a.cluster-map-node-action {
 .navbar-app-setting {
 	line-height: 30px;
 	font-weight: 300;
-	font-size: 12px;
+	font-size: 16px;
 }
 
 .rest-client-request-url {
