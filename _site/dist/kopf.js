@@ -3632,6 +3632,7 @@ function AceEditor(target) {
     fontFamily: 'Monaco, Menlo, Consolas, "Courier New", monospace',
     fontSize: '16px',
     fontWeight: '400',
+    minLines: '15',
     maxLines: '500'
   });
 
