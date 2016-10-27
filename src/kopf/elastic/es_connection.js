@@ -4,6 +4,8 @@
 // http://user:password@localhost:9200
 // https://localhost:9200
 function ESConnection(url, withCredentials) {
+  this.raw_url = url;
+
   if (url.indexOf('http://') !== 0 && url.indexOf('https://') !== 0) {
     url = 'http://' + url;
   }
@@ -21,5 +23,4 @@ function ESConnection(url, withCredentials) {
       this.host = url;
     }
   }
-
 }

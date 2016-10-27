@@ -35,6 +35,7 @@
         <li class="connection-info" ng-show="clusterName">
           {{clusterName}} @ {{clientName || current_host}}
         </li>
+        <li ng-navbar-section text="" click="refresh_click()" icon="fa-refresh"></li>
         <li>
           <a target="_self" href="#" data-toggle="dropdown" class="dropdown-toggle">
             <i class="fa fa-fw fa-cog"></i><i class="fa fa-fw fa-caret-down"></i>
@@ -89,8 +90,8 @@
             <li class="navbar-menu-section">
               <div class="row">
                 <div class="col-lg-12">
-                  <select ng-model="new_host" class="form-control input-sm" ng-change="changeEsHost()">
-                    <option ng-selected="{{ host_item == new_host }}" ng-repeat="host_item in host_list"
+                  <select ng-model="current_host" class="form-control input-sm" ng-change="changeEsHost()">
+                    <option ng-selected="{{ host_item == current_host }}" ng-repeat="host_item in host_list"
                             value="{{ host_item }}">{{ host_item }}</option>
                   </select>
                 </div>

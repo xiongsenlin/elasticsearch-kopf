@@ -7,8 +7,11 @@ kopf.controller('NavbarController', ['$scope', '$location',
     $scope.new_refresh = '' + ExternalSettingsService.getRefreshRate();
     $scope.theme = ExternalSettingsService.getTheme();
     $scope.host_list = ExternalSettingsService.getElasticsearchHosts();
-    $scope.new_host = ExternalSettingsService.getDefaultElasticsearchHost();
-    $scope.current_host = ElasticService.getHost();
+
+    /**
+     * the current connected host
+     */
+    $scope.current_host = ExternalSettingsService.getDefaultElasticsearchHost();
     $scope.host_history = HostHistoryService.getHostHistory();
 
     $scope.clusterStatus = undefined;
@@ -20,7 +23,9 @@ kopf.controller('NavbarController', ['$scope', '$location',
           return ElasticService.getHost();
         },
         function(newValue, oldValue) {
-          $scope.current_host = ElasticService.getHost();
+          if (ElasticService.getHost()) {
+            $scope.current_host = ElasticService.getHost();
+          }
         }
     );
 
@@ -45,13 +50,14 @@ kopf.controller('NavbarController', ['$scope', '$location',
 
     $scope.handleConnectToHost = function(event) {
       if (event.keyCode == 13 && notEmpty($scope.new_host)) {
-        $scope.connectToHost($scope.new_host);
+        $scope.connectToHost($scope.current_host);
       }
     };
 
     $scope.changeEsHost = function() {
-      $scope.connectToHost($scope.new_host);
-    }
+      $location.path("cluster");
+      $scope.connectToHost($scope.current_host);
+    };
 
     $scope.connectToHost = function(host) {
       try {
@@ -61,7 +67,7 @@ kopf.controller('NavbarController', ['$scope', '$location',
       } catch (error) {
         AlertService.error('Error while connecting to new target host', error);
       } finally {
-        $scope.current_host = ElasticService.connection.host;
+        $scope.current_host = ElasticService.getHost();
         ElasticService.refresh();
       }
     };
@@ -74,5 +80,8 @@ kopf.controller('NavbarController', ['$scope', '$location',
       ExternalSettingsService.setTheme($scope.theme);
     };
 
+    $scope.refresh_click = function() {
+      ElasticService.refresh();
+    }
   }
 ]);

@@ -92,7 +92,7 @@ kopf.factory('ElasticService', ['$http', '$q', '$timeout', '$location',
      */
     this.connect = function(host) {
       this.reset();
-      if (!isDefined(host) || host.length == 0) {
+      if (!isDefined(host) || host.length === 0) {
         host = ExternalSettingsService.getDefaultElasticsearchHost();
       }
       var root = ExternalSettingsService.getElasticsearchRootPath();
@@ -119,21 +119,23 @@ kopf.factory('ElasticService', ['$http', '$q', '$timeout', '$location',
             }
           },
           function(data) {
-            if (data.status == 503) {
-              DebugService.debug('No active master, switching to basic mode');
-              instance.setVersion(data.version.number);
-              instance.connected = true;
-              instance.setBrokenCluster(true);
-              AlertService.error('No active master, switching to basic mode');
-              if (!instance.autoRefreshStarted) {
-                instance.autoRefreshStarted = true;
-                instance.autoRefreshCluster();
+            if (data != null) {
+              if (data.status == 503) {
+                DebugService.debug('No active master, switching to basic mode');
+                instance.setVersion(data.version.number);
+                instance.connected = true;
+                instance.setBrokenCluster(true);
+                AlertService.error('No active master, switching to basic mode');
+                if (!instance.autoRefreshStarted) {
+                  instance.autoRefreshStarted = true;
+                  instance.autoRefreshCluster();
+                }
+              } else {
+                AlertService.error(
+                    'Error connecting to [' + instance.connection.host + ']',
+                    data
+                );
               }
-            } else {
-              AlertService.error(
-                  'Error connecting to [' + instance.connection.host + ']',
-                  data
-              );
             }
           }
       );
@@ -152,7 +154,7 @@ kopf.factory('ElasticService', ['$http', '$q', '$timeout', '$location',
     };
 
     this.getHost = function() {
-      return this.isConnected() ? this.connection.host : '';
+      return this.connection.raw_url;
     };
 
     this.versionCheck = function(version) {
@@ -898,42 +900,42 @@ kopf.factory('ElasticService', ['$http', '$q', '$timeout', '$location',
           var start = new Date().getTime();
           if (instance.brokenCluster) {
             instance.getBrokenClusterDetail(
-                function(brokenCluster) {
-                  instance.cluster = brokenCluster;
-                  if (instance.cluster.status !== 'red') {
-                    DebugService.debug('Switching to normal mode');
-                    instance.setBrokenCluster(false);
-                  }
-                },
-                function(response) {
-                  AlertService.error('Error loading cluster data', response);
-                  instance.cluster = undefined;
+              function(brokenCluster) {
+                instance.cluster = brokenCluster;
+                if (instance.cluster.status !== 'red') {
+                  DebugService.debug('Switching to normal mode');
+                  instance.setBrokenCluster(false);
                 }
+              },
+              function(response) {
+                AlertService.error('Error loading cluster data', response);
+                instance.cluster = undefined;
+              }
             );
           } else {
             instance.getClusterDetail(
-                function(cluster) {
-                  var end = new Date().getTime();
-                  var took = end - start;
-                  if (took >= threshold) {
-                    AlertService.warn('Loading cluster information is taking ' +
-                    'too long. Try increasing the refresh interval');
-                  }
-                  cluster.computeChanges(instance.cluster);
-                  instance.cluster = cluster;
-                  instance.alertClusterChanges();
-                },
-                function(response) {
-                  if (response.status === 503) {
-                    var message = 'No active master, switching to basic mode';
-                    DebugService.debug(message);
-                    AlertService.error(message);
-                    instance.setBrokenCluster(true);
-                  } else {
-                    AlertService.error('Error loading cluster data', response);
-                    instance.cluster = undefined;
-                  }
+              function(cluster) {
+                var end = new Date().getTime();
+                var took = end - start;
+                if (took >= threshold) {
+                  AlertService.warn('Loading cluster information is taking ' +
+                  'too long. Try increasing the refresh interval');
                 }
+                cluster.computeChanges(instance.cluster);
+                instance.cluster = cluster;
+                instance.alertClusterChanges();
+              },
+              function(response) {
+                if (response.status === 503) {
+                  var message = 'No active master, switching to basic mode';
+                  DebugService.debug(message);
+                  AlertService.error(message);
+                  instance.setBrokenCluster(true);
+                } else {
+                  AlertService.error('Error loading cluster data', response);
+                  instance.cluster = undefined;
+                }
+              }
             );
           }
 
