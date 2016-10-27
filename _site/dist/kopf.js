@@ -1583,6 +1583,7 @@ kopf.controller('NavbarController', ['$scope', '$location',
 
     $scope.refresh_click = function() {
       ElasticService.refresh();
+      AlertService.info("page refreshed!")
     }
   }
 ]);
@@ -2391,7 +2392,7 @@ kopf.directive('ngNavbarSection', ['$location', 'ElasticService',
                 '<i class="fa fa-fw ' + icon + '"></i> ' + text +
                 '</a>';
           } else {
-            return '<a ng-click="' + click + '">' +
+            return '<a href="javascript:void(0)" ng-click="' + click + '">' +
                 '<i class="fa fa-fw ' + icon + '"></i> ' + text +
                 '</a>';
           }

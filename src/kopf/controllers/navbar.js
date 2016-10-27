@@ -82,6 +82,7 @@ kopf.controller('NavbarController', ['$scope', '$location',
 
     $scope.refresh_click = function() {
       ElasticService.refresh();
+      AlertService.info("page refreshed!")
     }
   }
 ]);
